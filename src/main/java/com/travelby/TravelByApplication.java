@@ -7,6 +7,7 @@ import com.travelby.repository.AirlineRepository;
 import com.travelby.repository.CityRepository;
 import com.travelby.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +28,9 @@ public class TravelByApplication {
     @Autowired
     private FlightRepository flightRepository;
 
+    @Value("${traveby.should.import.flight-data}")
+    private boolean importFlightData;
+
     public TravelByApplication() {
     }
 
@@ -38,9 +42,11 @@ public class TravelByApplication {
     @Bean
     public CommandLineRunner demoData() {
         return args -> {
-            List<Flight> flights = generateFlights();
-            if (!flights.isEmpty())
-                flightRepository.saveAll(flights);
+            if (importFlightData) {
+                List<Flight> flights = generateFlights();
+                if (!flights.isEmpty())
+                    flightRepository.saveAll(flights);
+            }
         };
     }
 
