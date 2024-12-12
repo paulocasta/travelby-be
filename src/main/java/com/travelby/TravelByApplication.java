@@ -36,7 +36,6 @@ public class TravelByApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TravelByApplication.class, args);
-
     }
 
     @Bean
