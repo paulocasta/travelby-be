@@ -36,7 +36,6 @@ values
 --
 insert into airport (name, code, city_id)
 values
-('Jorge Newbury Airport','ARAEP', 1),
 ('Ministro Pistarini Airport','AREZE', 1),
 ('Islas Malvinas International Airport ','ROS', 2),
 ('Juscelino Kubitschek International Airport ', 'BSB', 3),
