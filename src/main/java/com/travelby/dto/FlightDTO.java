@@ -24,10 +24,12 @@ public class FlightDTO {
     private String destinationCityCode;
 
     private String departureAirport;
+    private String departureCode;
     private String departureDate;
 
     private String arriveAirport;
+    private String arriveCode;
     private String arriveDate;
 
-    private String cost;
+    private int cost;
 }
