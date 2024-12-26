@@ -1,6 +1,7 @@
 package com.travelby.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
 @Table(name = "airport")
@@ -11,11 +12,14 @@ public class Airport {
     private Long id;
 
     @Column
+    @Getter
     private String name;
 
     @Column
+    @Getter
     private String code;
 
-    @ManyToOne
+    @OneToOne
+    @Getter
     private City city;
 }
