@@ -1,9 +1,11 @@
 package com.travelby;
 
 import com.travelby.entities.Airline;
+import com.travelby.entities.Airport;
 import com.travelby.entities.City;
 import com.travelby.entities.Flight;
 import com.travelby.repository.AirlineRepository;
+import com.travelby.repository.AirportRepository;
 import com.travelby.repository.CityRepository;
 import com.travelby.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import javax.swing.text.html.Option;
+import java.util.*;
 
 @SpringBootApplication
 public class TravelByApplication {
@@ -27,8 +27,11 @@ public class TravelByApplication {
     private AirlineRepository airlineRepository;
     @Autowired
     private FlightRepository flightRepository;
+    @Autowired
+    private AirportRepository airportRepository;
 
-    @Value("${traveby.should.import.flight-data}")
+
+    @Value("${travelby.should.import.flight-data}")
     private boolean importFlightData;
 
     public TravelByApplication() {
@@ -52,17 +55,18 @@ public class TravelByApplication {
     private List<Flight> generateFlights() {
         List<City> cities = cityRepository.findAll();
         List<Airline> airlines = airlineRepository.findAll();
+        List<Airport> airports = airportRepository.findAll();
 
         if (cities.isEmpty() || airlines.isEmpty()) {
             return Collections.emptyList();
         }
         List<Flight> flights = new ArrayList<>();
-        createFlights(cities, airlines, flights);
+        createFlights(cities, airlines, flights, airports);
 
         return flights;
     }
 
-    private void createFlights(List<City> cities, List<Airline> airlines, List<Flight> flights) {
+    private void createFlights(List<City> cities, List<Airline> airlines, List<Flight> flights, List<Airport> airports) {
         int pointAC = 0;
         int pointBC = cities.size()-1;
         Random random = new Random();
@@ -72,12 +76,17 @@ public class TravelByApplication {
             City origin = cities.get(pointAC);
             City destination = cities.get(pointBC);
 
+            Optional<Airport> departureAirport = airports.stream().filter(airport -> airport.getCity().equals(origin)).findFirst();
+            Optional<Airport> arrivalAirport = airports.stream().filter(airport -> airport.getCity().equals(destination)).findFirst();
+
             for (CabinClass cc : CabinClass.values()) {
                 Flight flight = Flight.builder()
                         .origin(origin)
                         .destination(destination)
                         .cabinClass(cc.name)
                         .airline(airlines.get(random.nextInt(max - min + 1) + min))
+                        .departureAirport(departureAirport.orElse(null))
+                        .arrivalAirport(arrivalAirport.orElse(null))
                         .build();
                 flights.add(flight);
             }
