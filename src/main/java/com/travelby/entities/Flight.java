@@ -29,6 +29,14 @@ public class Flight {
     @Getter
     private Airline airline;
 
+    @OneToOne
+    @Getter
+    private Airport departureAirport;
+
+    @OneToOne
+    @Getter
+    private Airport arrivalAirport;
+
     @Column(name = "cabin_class")
     @Getter
     private String cabinClass;
